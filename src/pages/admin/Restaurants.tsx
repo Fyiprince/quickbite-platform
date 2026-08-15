@@ -92,7 +92,7 @@ export default function AdminRestaurants() {
         isOpen: form.isOpen,
       };
       if (editingId) {
-        await updateRestaurant({ restaurantId: editingId, ...payload });
+        await updateRestaurant({ restaurantId: editingId as Id<"restaurants">, ...payload });
         toast.success("Restaurant updated");
       } else {
         await createRestaurant({ latitude: 12.9716, longitude: 77.5946, ...payload });

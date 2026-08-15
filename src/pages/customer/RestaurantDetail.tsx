@@ -1,4 +1,5 @@
 import { api } from "@/convex/_generated/api";
+import type { Id } from "@/convex/_generated/dataModel";
 import { useQuery } from "convex/react";
 import { motion } from "framer-motion";
 import { ArrowLeft, Bike, Clock, ShoppingCart, Star, Store } from "lucide-react";
@@ -13,7 +14,7 @@ import { inr } from "@/lib/format";
 
 export default function RestaurantDetail() {
   const { id } = useParams<{ id: string }>();
-  const data = useQuery(api.customers.getRestaurant, { restaurantId: id! });
+  const data = useQuery(api.customers.getRestaurant, { restaurantId: id! as Id<"restaurants"> });
   const { addItem, setQuantity, items, count, subtotalPaise, restaurantId } = useCart();
   const navigate = useNavigate();
   const [fly, setFly] = useState<{ x: number; y: number } | null>(null);
@@ -32,8 +33,7 @@ export default function RestaurantDetail() {
   const categories = Object.keys(grouped);
 
   const handleAdd = (e: React.MouseEvent, menuItemId: string) => {
-    const item = grouped
-      .values()
+    const item = Object.values(grouped)
       .flat()
       .find((i) => i._id === menuItemId);
     if (!item || !item.isAvailable) return;

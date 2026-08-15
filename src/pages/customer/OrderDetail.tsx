@@ -1,4 +1,5 @@
 import { api } from "@/convex/_generated/api";
+import type { Id } from "@/convex/_generated/dataModel";
 import { useMutation, useQuery } from "convex/react";
 import { motion } from "framer-motion";
 import {
@@ -35,7 +36,7 @@ const STATUS_TOASTS: Partial<Record<OrderStatus, string>> = {
 
 export default function OrderDetail() {
   const { id } = useParams<{ id: string }>();
-  const data = useQuery(api.customers.getOrder, { orderId: id! });
+  const data = useQuery(api.customers.getOrder, { orderId: id! as Id<"orders"> });
   const cancelOrder = useMutation(api.customers.cancelOrder);
   const navigate = useNavigate();
 
@@ -81,7 +82,7 @@ export default function OrderDetail() {
 
   const partner = data?.deliveryPartner;
   const showMap =
-    ["ASSIGNED", "PICKED_UP", "OUT_FOR_DELIVERY", "DELIVERED"].includes(status) &&
+    ["ASSIGNED", "PICKED_UP", "OUT_FOR_DELIVERY", "DELIVERED"].includes(order.orderStatus) &&
     !!order.deliveryPartnerId;
 
   // progress along the pickup→drop axis (0 = at restaurant, 1 = at door)
@@ -124,9 +125,9 @@ export default function OrderDetail() {
             key={status}
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className={cn(statusChip(status), "px-3 py-1 text-sm")}
+            className={cn(statusChip(order.orderStatus), "px-3 py-1 text-sm")}
           >
-            {STATUS_META[status].label}
+            {STATUS_META[order.orderStatus].label}
           </motion.span>
         </div>
       </div>
@@ -165,8 +166,8 @@ export default function OrderDetail() {
       {/* Stepper */}
       <section className="rounded-2xl border bg-card p-5">
         <h2 className="mb-5 font-semibold">Order progress</h2>
-        <StatusStepper status={status} statusHistory={order.statusHistory} />
-        {["PENDING", "ACCEPTED"].includes(status) && (
+        <StatusStepper status={order.orderStatus} statusHistory={order.statusHistory} />
+        {["PENDING", "ACCEPTED"].includes(order.orderStatus) && (
           <Button
             variant="outline"
             size="sm"

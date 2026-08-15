@@ -133,7 +133,7 @@ export default function AdminDeliveryPartners() {
                     size="sm"
                     className="gap-1.5"
                     disabled={toggling === p._id}
-                    onClick={() => handleToggle(p._id, p.name ?? "Partner", p.status)}
+                    onClick={() => handleToggle(p._id, p.name ?? "Partner", p.status ?? "INACTIVE")}
                   >
                     {toggling === p._id ? (
                       <Loader2 className="size-3.5 animate-spin" />

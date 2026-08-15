@@ -3,7 +3,7 @@ import { api } from "@/convex/_generated/api";
 import { useMutation } from "convex/react";
 import { Loader2, ShieldAlert } from "lucide-react";
 import { useEffect, useState, type ReactNode } from "react";
-import { Navigate, useLocation } from "react-router";
+import { Navigate, useLocation, useNavigate } from "react-router";
 import { Button } from "@/components/ui/button";
 import type { Role } from "@/lib/roles";
 

@@ -22,7 +22,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { useCart } from "@/store/cart";
-import { inr, parseError } from "@/lib/parse";
+import { inr } from "@/lib/format";
+import { parseError } from "@/lib/parse";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 
@@ -62,7 +63,7 @@ export default function Checkout() {
 
   useEffect(() => {
     if (addresses && addresses.length > 0 && !selectedAddressId) {
-      setSelectedAddressId(addresses.find((a) => a.isDefault)?.id ?? addresses[0].id);
+      setSelectedAddressId(addresses.find((a) => a.isDefault)?._id ?? addresses[0]._id);
     }
   }, [addresses, selectedAddressId]);
 
@@ -129,8 +130,8 @@ export default function Checkout() {
     setPlacing(true);
     try {
       const { orderId } = await placeOrder({
-        restaurantId,
-        addressId: selectedAddressId!,
+        restaurantId: restaurantId as Id<"restaurants">,
+        addressId: selectedAddressId! as Id<"addresses">,
         couponCode: appliedCoupon?.code,
         items: items.map((i) => ({ menuItemId: i.menuItemId as Id<"menuItems">, quantity: i.quantity })),
         paymentMethod,

@@ -26,7 +26,7 @@ export default function AdminCustomers() {
             </tr>
           </thead>
           <tbody className="divide-y">
-            {customers.map((c) => {
+            {customers.map((c) => (
                 <tr key={c._id} className="transition-colors hover:bg-muted/40">
                   <td className="px-5 py-3.5">
                     <div className="flex items-center gap-3">
@@ -49,8 +49,7 @@ export default function AdminCustomers() {
                   </td>
                   <td className="px-5 py-3.5 text-muted-foreground">{timeAgo(c._creationTime)}</td>
                 </tr>
-              );
-            })}
+            ))}
           </tbody>
         </table>
       )}

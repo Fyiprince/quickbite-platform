@@ -163,6 +163,25 @@ export const completeProfile = mutation({
   },
 });
 
+/** Delivery partners update their own profile (name / phone / vehicle). */
+export const updateDeliveryProfile = mutation({
+  args: {
+    name: v.optional(v.string()),
+    phone: v.optional(v.string()),
+    vehicleType: v.optional(v.string()),
+  },
+  handler: async (ctx, args) => {
+    const user = await getSessionUser(ctx);
+    requireRole(user, ROLES.DELIVERY);
+    const patch: Record<string, string> = {};
+    if (args.name?.trim()) patch.name = args.name.trim();
+    if (args.phone?.trim()) patch.phone = args.phone.trim();
+    if (args.vehicleType?.trim()) patch.vehicleType = args.vehicleType.trim();
+    if (Object.keys(patch).length > 0) await ctx.db.patch(user._id, patch);
+    return true;
+  },
+});
+
 /** Delivery partners toggle availability (shown on their dashboard). */
 export const setAvailability = mutation({
   args: { isAvailable: v.boolean() },

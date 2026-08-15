@@ -46,8 +46,8 @@ const EMPTY: ItemForm = {
 
 export default function AdminRestaurantMenu() {
   const { id } = useParams<{ id: string }>();
-  const restaurant = useQuery(api.customers.getRestaurant, { restaurantId: id! });
-  const items = useQuery(api.admin.listMenuItems, { restaurantId: id! });
+  const restaurant = useQuery(api.customers.getRestaurant, { restaurantId: id! as Id<"restaurants"> });
+  const items = useQuery(api.admin.listMenuItems, { restaurantId: id! as Id<"restaurants"> });
   const addMenuItem = useMutation(api.admin.addMenuItem);
   const updateMenuItem = useMutation(api.admin.updateMenuItem);
   const deleteMenuItem = useMutation(api.admin.deleteMenuItem);
@@ -59,7 +59,7 @@ export default function AdminRestaurantMenu() {
   const [busy, setBusy] = useState(false);
 
   const grouped = useMemo(() => {
-    const acc: Record<string, typeof items> = {};
+    const acc: Record<string, NonNullable<typeof items>> = {};
     (items ?? []).forEach((item) => {
       (acc[item.category] ??= []).push(item);
     });
@@ -101,10 +101,10 @@ export default function AdminRestaurantMenu() {
         isPopular: form.isPopular,
       };
       if (editingId) {
-        await updateMenuItem({ itemId: editingId, ...payload });
+        await updateMenuItem({ itemId: editingId as Id<"menuItems">, ...payload });
         toast.success("Item updated");
       } else {
-        await addMenuItem({ restaurantId: id, ...payload });
+        await addMenuItem({ restaurantId: id as Id<"restaurants">, ...payload });
         toast.success("Item added");
       }
       setDialogOpen(false);
